@@ -1,0 +1,76 @@
+diff -drupN 2020-03-28_CLEAN/indicators/default/package/ui/main.qml 2020-03-28/indicators/default/package/ui/main.qml
+--- 2020-03-28_CLEAN/indicators/default/package/ui/main.qml	2020-03-28 15:56:19.364425392 +0200
++++ 2020-03-28/indicators/default/package/ui/main.qml	2020-03-28 16:12:25.324804572 +0200
+@@ -35,14 +35,14 @@ LatteComponents.IndicatorItem{
+     enabledForApplets: indicator && indicator.configuration ? indicator.configuration.enabledForApplets : true
+     lengthPadding: indicator && indicator.configuration ? indicator.configuration.lengthPadding : 0.08
+ 
+-    readonly property real factor: 0.08
++    readonly property real factor: 0.11
+     readonly property int size: factor * indicator.currentIconSize
+ 
+     readonly property int screenEdgeMargin: plasmoid.location === PlasmaCore.Types.Floating || reversedEnabled ? 0 : indicator.screenEdgeMargin
+ 
+     property real textColorBrightness: colorBrightness(theme.textColor)
+ 
+-    property color isActiveColor: theme.buttonFocusColor
++    property color isActiveColor: "black"
+     property color minimizedColor: {
+         if (minimizedTaskColoredDifferently) {
+             return (textColorBrightness > 127.5 ? Qt.darker(theme.textColor, 1.7) : Qt.lighter(theme.textColor, 7));
+@@ -96,6 +96,11 @@ LatteComponents.IndicatorItem{
+             LatteComponents.GlowPoint{
+                 id:firstPoint
+                 opacity: {
++
++                    if (taskItem.launcherName === "org.kde.dolphin") {
++                        return 1;
++                    }
++
+                     if (indicator.isEmptySpace) {
+                         return 0;
+                     }
+@@ -237,9 +242,7 @@ LatteComponents.IndicatorItem{
+                 basicColor: state2Color
+                 roundCorners: true
+                 showGlow: glowEnabled  && glowApplyTo === 2 /*All*/
+-                visible:  ( indicator.isGroup && ((extraDotOnActive && activeStyle === 0) /*Line*/
+-                                                  || activeStyle === 1 /*Dot*/
+-                                                  || !indicator.hasActive) ) ? true: false
++                visible: false
+ 
+                 //when there is no active window
+                 property color state1Color: indicator.hasShown ? root.isActiveColor : root.minimizedColor
+@@ -278,7 +281,7 @@ LatteComponents.IndicatorItem{
+                 }
+                 PropertyChanges{
+                     target: mainIndicatorElement
+-                    anchors.leftMargin: 0;    anchors.rightMargin: 0;     anchors.topMargin:0;    anchors.bottomMargin: root.screenEdgeMargin;
++                    anchors.leftMargin: 0;    anchors.rightMargin: 0;     anchors.topMargin:0;    anchors.bottomMargin: 1;
+                     anchors.horizontalCenterOffset: 0; anchors.verticalCenterOffset: 0;
+                 }
+             },
+diff -drupN 2020-03-28_CLEAN/plasmoid/package/contents/ui/indicators/styles/LatteIndicator.qml 2020-03-28/plasmoid/package/contents/ui/indicators/styles/LatteIndicator.qml
+--- 2020-03-28_CLEAN/plasmoid/package/contents/ui/indicators/styles/LatteIndicator.qml	2020-03-28 15:56:19.372425197 +0200
++++ 2020-03-28/plasmoid/package/contents/ui/indicators/styles/LatteIndicator.qml	2020-03-28 16:03:07.762436289 +0200
+@@ -37,7 +37,7 @@ LatteComponents.IndicatorItem{
+ 
+     property real textColorBrightness: colorBrightness(theme.textColor)
+ 
+-    property color isActiveColor: theme.buttonFocusColor
++    property color isActiveColor: "black"
+     property color minimizedColor: {
+         if (minimizedTaskColoredDifferently) {
+             return (textColorBrightness > 127.5 ? Qt.darker(theme.textColor, 1.7) : Qt.lighter(theme.textColor, 7));
+diff -drupN 2020-03-28_CLEAN/plasmoid/package/contents/ui/task/indicator/Bridge.qml 2020-03-28/plasmoid/package/contents/ui/task/indicator/Bridge.qml
+--- 2020-03-28_CLEAN/plasmoid/package/contents/ui/task/indicator/Bridge.qml	2020-03-28 15:56:19.376425099 +0200
++++ 2020-03-28/plasmoid/package/contents/ui/task/indicator/Bridge.qml	2020-03-28 16:01:09.397330177 +0200
+@@ -53,6 +53,8 @@ Item {
+     readonly property bool inAttention: taskIsValid ? taskItem.inAttention : false
+     readonly property bool inRemoving: taskIsValid ? taskItem.inRemoveStage : false
+ 
++    readonly property string taskLauncherName: taskIsValid ? taskItem.launcherName : ""
++
+     readonly property bool isSquare: true
+ 
+     readonly property bool hasActive: taskIsValid ? taskItem.hasActive : false

@@ -1,0 +1,11 @@
+--- /usr/share/plasma/plasmoids/org.kde.plasma.private.systemtray/contents/ui/main.qml.orig	2020-03-29 16:47:25.636635139 +0300
++++ /usr/share/plasma/plasmoids/org.kde.plasma.private.systemtray/contents/ui/main.qml	2020-03-28 12:38:54.042680449 +0200
+@@ -318,7 +318,7 @@ MouseArea {
+     //Main Layout
+     Flow {
+         id: tasksRow
+-        spacing: 0
++        spacing: 4
+         height: parent.height - (vertical && expander.visible ? expander.height : 0)
+         width: parent.width - (vertical || !expander.visible ? 0 : expander.width)
+         property string skipItems
